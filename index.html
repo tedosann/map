@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <title>USS Sperry WWII Route</title>
+    <link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.9.4/dist/leaflet.css\" />
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id=\"map\"></div>
+<script src=\"https://unpkg.com/leaflet@1.9.4/dist/leaflet.js\"></script>
+<script>
+    // Initialize map with Pacific-centered view
+    const map = L.map('map', {
+        center: [20, 180],
+        zoom: 3,
+        worldCopyJump: true // Avoids route jumping at 180th meridian
+    });
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Example polyline for Sperry's route (use your actual coordinates later)
+    const exampleRoute = [
+        [40.0, -74.0], // East Coast USA
+        [10.0, -79.5], // Panama
+        [21.3, -157.8], // Hawaii
+        [35.7, 139.7], // Tokyo, Japan
+        [22.3, 114.2]  // Hong Kong
+    ];
+
+    // Draw example route
+    L.polyline(exampleRoute, {color: 'blue'}).addTo(map);
+
+    // Fit the view to the route
+    map.fitBounds(exampleRoute);
+</script>
+</body>
+</html>
