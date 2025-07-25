@@ -91,13 +91,15 @@
     ];
 
     let segments = [[]];
-    for (let i = 0; i < route.length; i++) {
-        const current = route[i].slice(1);
-        const prev = segments[segments.length - 1].slice(-1)[0];
-        if (prev && Math.abs(current[1] - prev[1]) > 180) {
-            segments.push([current]);
+    segments[0].push(route[0].slice(1));
+    for (let i = 1; i < route.length; i++) {
+        const prev = route[i - 1][2];
+        const curr = route[i][2];
+        const diff = Math.abs(curr - prev);
+        if (diff > 180) {
+            segments.push([route[i].slice(1)]);
         } else {
-            segments[segments.length - 1].push(current);
+            segments[segments.length - 1].push(route[i].slice(1));
         }
     }
 
