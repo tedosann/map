@@ -2,68 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>USS Sperry WWII Route</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <title>USS Sperry WWII Route (deck.gl)</title>
+    <script src="https://unpkg.com/deck.gl@8.9.24/dist.min.js"></script>
+    <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
     <style>
         body, html {
-            height: 100vh;
             margin: 0;
             padding: 0;
+            height: 100vh;
         }
         #map {
-            height: 100vh;
-            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
     </style>
 </head>
 <body>
 <div id="map"></div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    const map = L.map('map', {
-        center: [20, 180],
-        zoom: 3,
-        worldCopyJump: true
+    const map = new maplibregl.Map({
+        container: 'map',
+        style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+        center: [180, 20],
+        zoom: 2
     });
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+    const routeGeoJSON = {
+        type: 'Feature',
+        geometry: {
+            type: 'LineString',
+            coordinates: [
+                [-74.0, 40.0],     // East Coast USA
+                [-75.0, 34.5],     // Off Cape Hatteras
+                [-81.5, 24.0],     // Florida Straits
+                [-79.5, 10.0],     // Panama
+                [-130.0, 12.0],    // Mid-Pacific
+                [-157.8, 21.3],    // Hawaii
+                [-170.0, 25.0],    // Near 180W
+                [179.9, 30.0],     // Just across the antimeridian
+                [139.7, 35.7],     // Tokyo
+                [114.2, 22.3]      // Hong Kong
+            ]
+        }
+    };
 
-    // Route manually split to avoid antimeridian jump
-    const segment1 = [
-        [40.0, -74.0],     // East Coast USA
-        [34.5, -75.0],     // Off Cape Hatteras
-        [24.0, -81.5],     // Between Cuba and Florida Keys
-        [10.0, -79.5],     // Panama
-        [12.0, -130.0],    // Mid-Pacific
-        [21.3, -157.8],    // Hawaii
-        [25.0, -170.0],    // West of 180
-        [30.0, -179.9]     // Just before antimeridian
-    ];
-
-    const segment2 = [
-    [30.0, -179.8],     // Just after antimeridian, staying in western hemisphere
-    [35.7, 139.7],      // Tokyo
-    [22.3, 114.2]       // Hong Kong
-];
-
-    L.polyline(segment1, { color: 'blue', noClip: true }).addTo(map);
-    L.polyline(segment2, { color: 'blue', noClip: true }).addTo(map);
-
-    // Markers at actual positions
-    const allPoints = segment1.concat(segment2);
-    allPoints.forEach(([lat, lng]) => {
-        L.circleMarker([lat, lng], {
-            radius: 4,
-            color: 'red',
-            fillColor: 'red',
-            fillOpacity: 0.8
-        }).addTo(map);
+    map.on('load', () => {
+        const deckgl = new deck.DeckGL({
+            map: map,
+            layers: [
+                new deck.GeoJsonLayer({
+                    id: 'sperry-route',
+                    data: routeGeoJSON,
+                    getLineColor: [0, 0, 255],
+                    getLineWidth: 4,
+                    lineWidthUnits: 'pixels'
+                })
+            ]
+        });
     });
-
-    map.fitBounds(allPoints, { padding: [50, 50] });
 </script>
 </body>
 </html>
