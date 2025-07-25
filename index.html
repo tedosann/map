@@ -32,23 +32,37 @@
     });
 
     const routeGeoJSON = {
-        type: 'Feature',
-        geometry: {
-            type: 'LineString',
-            coordinates: [
-                [-74.0, 40.0],     // East Coast USA
-                [-75.0, 34.5],     // Off Cape Hatteras
-                [-81.5, 24.0],     // Florida Straits
-                [-79.5, 10.0],     // Panama
-                [-130.0, 12.0],    // Mid-Pacific
-                [-157.8, 21.3],    // Hawaii
-                [-170.0, 25.0],    // Near 180W
-                [179.9, 30.0],     // Just across the antimeridian
-                [139.7, 35.7],     // Tokyo
-                [114.2, 22.3]      // Hong Kong
-            ]
+    type: 'FeatureCollection',
+    features: [
+        {
+            type: 'Feature',
+            geometry: {
+                type: 'LineString',
+                coordinates: [
+                    [-74.0, 40.0],     // East Coast USA
+                    [-75.0, 34.5],     // Off Cape Hatteras
+                    [-81.5, 24.0],     // Florida Straits
+                    [-79.5, 10.0],     // Panama
+                    [-130.0, 12.0],    // Mid-Pacific
+                    [-157.8, 21.3],    // Hawaii
+                    [-170.0, 25.0],    // Near 180W
+                    [-179.9, 30.0]     // Just before antimeridian
+                ]
+            }
+        },
+        {
+            type: 'Feature',
+            geometry: {
+                type: 'LineString',
+                coordinates: [
+                    [179.9, 30.0],     // Just after antimeridian
+                    [139.7, 35.7],     // Tokyo
+                    [114.2, 22.3]      // Hong Kong
+                ]
+            }
         }
-    };
+    ]
+};
 
     map.on('load', () => {
         const deckgl = new deck.DeckGL({
