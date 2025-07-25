@@ -19,9 +19,10 @@
 <body>
 <div id="map"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-antimeridian@1.0.0/dist/leaflet-antimeridian.js"></script>
 <script>
     // Explicitly set initial map view centered on the Pacific
-    const map = L.map('map').setView([20, 180], 3);
+    const map = L.map('map', {worldCopyJump: true}).setView([20, 180], 3);
 
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -29,8 +30,8 @@
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Adjust coordinates by adding 360 to negative longitudes
-    const originalRoute = [
+    // Original route coordinates
+    const route = [
         [40.0, -74.0],     // East Coast USA
         [10.0, -79.5],     // Panama
         [21.3, -157.8],    // Hawaii
@@ -38,13 +39,12 @@
         [22.3, 114.2]      // Hong Kong
     ];
 
-    const adjustedRoute = originalRoute.map(([lat, lng]) => [lat, lng < 0 ? lng + 360 : lng]);
+    // Draw polyline using antimeridian-aware plugin
+    const polyline = L.polyline(route, {color: 'blue'});
+    const wrappedPolyline = L.polyline.antimeridian(polyline.getLatLngs(), {color: 'blue'}).addTo(map);
 
-    // Draw corrected route
-    const polyline = L.polyline(adjustedRoute, {color: 'blue'}).addTo(map);
-
-    // Set map view to fit adjusted route
-    map.fitBounds(polyline.getBounds(), {padding: [50, 50]});
+    // Fit bounds to the wrapped polyline
+    map.fitBounds(wrappedPolyline.getBounds(), {padding: [50, 50]});
 </script>
 </body>
 </html>
