@@ -91,33 +91,10 @@
     ];
 
     const coords = route.map(r => [r[1], r[2]]);
-    const path = [];
-    for (let i = 1; i < coords.length; i++) {
-        const [prevLat, prevLng] = coords[i - 1];
-        const [currLat, currLng] = coords[i];
-        const diff = Math.abs(currLng - prevLng);
-        if (diff > 180) {
-            path.push([prevLat, prevLng]);
-            path.push(null);
-        }
-        path.push([currLat, currLng]);
-    }
 
-    let currentSegment = [];
-    for (let i = 0; i < path.length; i++) {
-        const point = path[i];
-        if (point === null) {
-            if (currentSegment.length > 1) {
-                L.polyline(currentSegment, { color: 'blue' }).addTo(map);
-            }
-            currentSegment = [];
-        } else {
-            currentSegment.push(point);
-        }
-    }
-    if (currentSegment.length > 1) {
-        L.polyline(currentSegment, { color: 'blue' }).addTo(map);
-    }
+    // Normalize longitudes to prevent wrapping
+    const normalized = coords.map(([lat, lng]) => [lat, ((lng + 540) % 360) - 180]);
+    L.polyline(normalized, { color: 'blue' }).addTo(map);
 
     route.forEach(([label, lat, lng]) => {
         L.circleMarker([lat, lng], {
