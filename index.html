@@ -44,10 +44,10 @@
     ];
 
     const segment2 = [
-        [30.0, 179.9],     // Just after antimeridian
-        [35.7, 139.7],     // Tokyo
-        [22.3, 114.2]      // Hong Kong
-    ];
+    [30.0, -179.8],     // Just after antimeridian, staying in western hemisphere
+    [35.7, 139.7],      // Tokyo
+    [22.3, 114.2]       // Hong Kong
+];
 
     L.polyline(segment1, { color: 'blue', noClip: true }).addTo(map);
     L.polyline(segment2, { color: 'blue', noClip: true }).addTo(map);
