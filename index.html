@@ -27,7 +27,6 @@
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Manually split route to avoid jump across antimeridian
     const segment1 = [
         [40.0, -74.0],     // East Coast USA
         [10.0, -79.5],     // Panama
@@ -35,17 +34,27 @@
     ];
 
     const segment2 = [
-        [21.3, 202.2 - 360], // Hawaii (continue from here to avoid jump)
         [35.7, 139.7],     // Tokyo
         [22.3, 114.2]      // Hong Kong
     ];
 
-    L.polyline(segment1, { color: 'blue' }).addTo(map);
-    L.polyline(segment2, { color: 'blue' }).addTo(map);
+    // Draw segments
+    const line1 = L.polyline(segment1, { color: 'blue' }).addTo(map);
+    const line2 = L.polyline(segment2, { color: 'blue' }).addTo(map);
 
-    // Fit bounds to all segments
-    const allPoints = segment1.concat(segment2);
-    map.fitBounds(allPoints, { padding: [50, 50] });
+    // Add markers to verify it's working
+    const ports = segment1.concat(segment2);
+    ports.forEach(([lat, lng]) => {
+        L.circleMarker([lat, lng], {
+            radius: 4,
+            color: 'red',
+            fillColor: 'red',
+            fillOpacity: 0.8
+        }).addTo(map);
+    });
+
+    // Fit bounds to all points
+    map.fitBounds(ports, { padding: [50, 50] });
 </script>
 </body>
 </html>
