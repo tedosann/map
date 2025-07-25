@@ -32,49 +32,94 @@
     }).addTo(map);
 
     const route = [
-        [40.7003, -73.9721], [32.2949, -64.783], [40.6782, -73.9442], [36.8508, -76.2859],
-        [8.9824, -79.5199], [33.7325, -118.2794], [21.345, -157.95], [11.34, 162.33],
-        [7.0, 150.0], [13.4443, 144.7937], [10.0167, 139.7833], [20.5833, 122.25],
-        [10.34599, 107.08426], [10.776264, 106.694936], [12.0086, 109.2177],
-        [22.3193, 114.1694], [19.5664, 109.9497], [23.1291, 113.2644], [23.3541, 116.6819],
-        [10.0167, 139.7833], [36.2048, 138.2529], [35.6764, 139.65], [24.7481, 141.2906],
-        [24.75028, 141.28889], [32.7503, 129.8777], [24.70965, 124.38848], [25.8281, 131.2311],
-        [28.2667, 129.35], [26.2124, 127.6792], [10.9833, 125.0333], [39.275, 141.88],
-        [34.739, 139.3986], [34.6901, 135.1955], [34.8833, 139.4333], [35.1815, 136.9066],
-        [34.7108, 137.726], [34.3853, 132.4553], [32.7503, 129.8777], [35.6764, 139.65],
-        [35.1333, 139.4833], [35.4437, 139.638], [35.2819, 139.6725], [35.375, 139.75],
-        [11.34, 162.33], [34.226, 135.1675], [31.5966, 130.5571], [33.1594, 129.7222]
+        ["Brooklyn Navy Yard, New York", 40.7003, -73.9721],
+        ["Bermuda (Hamilton Bay)", 32.2949, -64.783],
+        ["Brooklyn, New York", 40.6782, -73.9442],
+        ["Norfolk, Virginia", 36.8508, -76.2859],
+        ["Panama City, Panama", 8.9824, -79.5199],
+        ["San Pedro Bay, California", 33.7325, -118.2794],
+        ["Pearl Harbor, Hawaii", 21.345, -157.95],
+        ["Eniwetok Atoll", 11.34, 162.33],
+        ["Carolines", 7.0, 150.0],
+        ["Off Guam", 13.4443, 144.7937],
+        ["Ulithi, Micronesia", 10.0167, 139.7833],
+        ["Bashi Channel", 20.5833, 122.25],
+        ["Cape St. Jacques (Vũng Tàu)", 10.34599, 107.08426],
+        ["Saigon", 10.776264, 106.694936],
+        ["Camranh Bay, Vietnam", 12.0086, 109.2177],
+        ["Hong Kong", 22.3193, 114.1694],
+        ["Hainan", 19.5664, 109.9497],
+        ["Canton", 23.1291, 113.2644],
+        ["Swatow", 23.3541, 116.6819],
+        ["Ulithi Atoll", 10.0167, 139.7833],
+        ["Off Honshu, Japan", 36.2048, 138.2529],
+        ["Tokyo", 35.6764, 139.65],
+        ["Iwo Jima", 24.7481, 141.2906],
+        ["Mount Suribachi", 24.75028, 141.28889],
+        ["Kyushu", 32.7503, 129.8777],
+        ["Sakishima Islands", 24.70965, 124.38848],
+        ["Minami Daito Shima", 25.8281, 131.2311],
+        ["Amami Gunto", 28.2667, 129.35],
+        ["Naha, Okinawa", 26.2124, 127.6792],
+        ["Minami Daito Shima", 25.8281, 131.2311],
+        ["San Pedro Bay, Leyte Gulf", 10.9833, 125.0333],
+        ["Okinawa", 26.3344, 127.8056],
+        ["Samar, Philippines", 11.7667, 125.5],
+        ["Kamaishi, Honshu", 39.275, 141.88],
+        ["Kure", 34.739, 139.3986],
+        ["Kobe", 34.6901, 135.1955],
+        ["Sagami Wan / O’Shima", 34.8833, 139.4333],
+        ["Nagoya", 35.1815, 136.9066],
+        ["Hamamatsu", 34.7108, 137.726],
+        ["Hiroshima", 34.3853, 132.4553],
+        ["Nagasaki", 32.7503, 129.8777],
+        ["Tokyo area", 35.6764, 139.65],
+        ["Sagami Wan", 35.1333, 139.4833],
+        ["Iwo Jima", 24.7833, 141.3167],
+        ["Yokohama", 35.4437, 139.638],
+        ["Yokosuka", 35.2819, 139.6725],
+        ["Tokyo Bay", 35.375, 139.75],
+        ["Tokyo Bay", 35.375, 139.75],
+        ["Eniwetok Atoll", 11.34, 162.33],
+        ["Nagoya", 35.1815, 136.9066],
+        ["Wakayama", 34.226, 135.1675],
+        ["Hiroshima", 34.3853, 132.4553],
+        ["Kure", 34.25, 132.5667],
+        ["Kagoshima", 31.5966, 130.5571],
+        ["Nagasaki", 32.7503, 129.8777],
+        ["Sasebo", 33.1594, 129.7222]
     ];
 
-    // Draw route and handle antimeridian jump
-    for (let i = 0; i < route.length - 1; i++) {
-        const [lat1, lng1] = route[i];
-        const [lat2, lng2] = route[i + 1];
-        const diff = Math.abs(lng2 - lng1);
-
-        if (diff > 180) {
-            // Split line into two to avoid wrapping
-            const midLng1 = lng1 < 0 ? 180 : -180;
-            const midLng2 = lng2 < 0 ? 180 : -180;
-
-            L.polyline([[lat1, lng1], [lat1, midLng1]], { color: 'blue' }).addTo(map);
-            L.polyline([[lat2, midLng2], [lat2, lng2]], { color: 'blue' }).addTo(map);
+    let segments = [[]];
+    for (let i = 0; i < route.length; i++) {
+        const current = route[i].slice(1);
+        const prev = segments[segments.length - 1].slice(-1)[0];
+        if (prev && Math.abs(current[1] - prev[1]) > 180) {
+            segments.push([current]);
         } else {
-            L.polyline([[lat1, lng1], [lat2, lng2]], { color: 'blue' }).addTo(map);
+            segments[segments.length - 1].push(current);
         }
     }
 
-    // Add markers
-    route.forEach(([lat, lng]) => {
+    segments.forEach(seg => {
+        L.polyline(seg, { color: 'blue' }).addTo(map);
+    });
+
+    route.forEach(([label, lat, lng]) => {
         L.circleMarker([lat, lng], {
             radius: 4,
             color: 'red',
             fillColor: 'red',
             fillOpacity: 0.8
-        }).addTo(map);
+        }).addTo(map).bindTooltip(label, {
+            permanent: true,
+            direction: 'right',
+            offset: [6, 0],
+            className: 'map-label'
+        });
     });
 
-    map.fitBounds(route, { padding: [50, 50] });
+    map.fitBounds(route.map(p => [p[1], p[2]]), { padding: [50, 50] });
 </script>
 </body>
 </html>
