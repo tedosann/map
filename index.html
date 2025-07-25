@@ -31,27 +31,30 @@
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Convert all longitudes < 0 to positive by adding 360
-    const originalRoute = [
+    // Split the route into two parts to avoid antimeridian wrapping
+    const segment1 = [
         [40.0, -74.0],     // East Coast USA
         [33.0, -70.0],     // South of Bermuda
         [22.0, -75.0],     // South of Cuba
         [10.0, -79.5],     // Panama
         [12.0, -130.0],    // Mid-Pacific
         [21.3, -157.8],    // Hawaii
-        [25.0, 170.0],     // Near Wake Island
-        [30.0, 150.0],     // Pacific
+        [25.0, -170.0],    // Near 180° west
+        [30.0, -179.9]     // Just before antimeridian
+    ];
+
+    const segment2 = [
+        [30.0, 179.9],     // Just after antimeridian
         [35.7, 139.7],     // Tokyo
         [22.3, 114.2]      // Hong Kong
     ];
 
-    const adjustedRoute = originalRoute.map(([lat, lng]) => [lat, lng < 0 ? lng + 360 : lng]);
+    L.polyline(segment1, { color: 'blue' }).addTo(map);
+    L.polyline(segment2, { color: 'blue' }).addTo(map);
 
-    // Draw adjusted polyline
-    L.polyline(adjustedRoute, { color: 'blue' }).addTo(map);
-
-    // Add markers at original (non-adjusted) positions so they appear in the right spot visually
-    originalRoute.forEach(([lat, lng]) => {
+    // Add markers for each point
+    const ports = segment1.concat(segment2);
+    ports.forEach(([lat, lng]) => {
         L.circleMarker([lat, lng], {
             radius: 4,
             color: 'red',
@@ -60,7 +63,7 @@
         }).addTo(map);
     });
 
-    map.fitBounds(adjustedRoute, { padding: [50, 50] });
+    map.fitBounds(ports, { padding: [50, 50] });
 </script>
 </body>
 </html>
