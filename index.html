@@ -31,11 +31,11 @@
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Split the route into two parts to avoid antimeridian wrapping
+    // Adjust route to pass between Cuba and the US East Coast
     const segment1 = [
         [40.0, -74.0],     // East Coast USA
-        [33.0, -70.0],     // South of Bermuda
-        [22.0, -75.0],     // South of Cuba
+        [34.5, -75.0],     // Off Cape Hatteras
+        [24.0, -81.5],     // Between Cuba and Florida Keys
         [10.0, -79.5],     // Panama
         [12.0, -130.0],    // Mid-Pacific
         [21.3, -157.8],    // Hawaii
