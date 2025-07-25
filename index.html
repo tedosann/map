@@ -27,23 +27,21 @@
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    const segment1 = [
+    // Original coordinates for markers (not shifted)
+    const ports = [
         [40.0, -74.0],     // East Coast USA
         [10.0, -79.5],     // Panama
-        [21.3, -157.8]     // Hawaii
-    ];
-
-    const segment2 = [
+        [21.3, -157.8],    // Hawaii
         [35.7, 139.7],     // Tokyo
         [22.3, 114.2]      // Hong Kong
     ];
 
-    // Draw segments
-    const line1 = L.polyline(segment1, { color: 'blue' }).addTo(map);
-    const line2 = L.polyline(segment2, { color: 'blue' }).addTo(map);
+    // Shift longitudes for polyline only to avoid antimeridian jump
+    const shifted = ports.map(([lat, lng]) => [lat, lng < 0 ? lng + 360 : lng]);
 
-    // Add markers to verify it's working
-    const ports = segment1.concat(segment2);
+    L.polyline(shifted, { color: 'blue' }).addTo(map);
+
+    // Draw markers using original coordinates
     ports.forEach(([lat, lng]) => {
         L.circleMarker([lat, lng], {
             radius: 4,
@@ -53,8 +51,7 @@
         }).addTo(map);
     });
 
-    // Fit bounds to all points
-    map.fitBounds(ports, { padding: [50, 50] });
+    map.fitBounds(shifted, { padding: [50, 50] });
 </script>
 </body>
 </html>
