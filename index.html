@@ -39,12 +39,12 @@
         [22.3, 114.2]      // Hong Kong
     ];
 
-    // Draw polyline using antimeridian-aware plugin
-    const polyline = L.polyline(route, {color: 'blue'});
-    const wrappedPolyline = L.polyline.antimeridian(polyline.getLatLngs(), {color: 'blue'}).addTo(map);
+    // Wrap and draw the antimeridian-safe polyline
+    const polyline = L.polyline(route, {color: 'blue'}).wrap();
+    polyline.addTo(map);
 
     // Fit bounds to the wrapped polyline
-    map.fitBounds(wrappedPolyline.getBounds(), {padding: [50, 50]});
+    map.fitBounds(polyline.getBounds(), {padding: [50, 50]});
 </script>
 </body>
 </html>
