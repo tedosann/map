@@ -19,32 +19,33 @@
 <body>
 <div id="map"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-antimeridian@1.0.0/dist/leaflet-antimeridian.js"></script>
 <script>
-    // Explicitly set initial map view centered on the Pacific
-    const map = L.map('map', {worldCopyJump: true}).setView([20, 180], 3);
+    const map = L.map('map', { worldCopyJump: true }).setView([20, 180], 3);
 
-    // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Original route coordinates
-    const route = [
+    // Manually split route to avoid jump across antimeridian
+    const segment1 = [
         [40.0, -74.0],     // East Coast USA
         [10.0, -79.5],     // Panama
-        [21.3, -157.8],    // Hawaii
-        [35.7, 139.7],     // Tokyo, Japan
+        [21.3, -157.8]     // Hawaii
+    ];
+
+    const segment2 = [
+        [21.3, 202.2 - 360], // Hawaii (continue from here to avoid jump)
+        [35.7, 139.7],     // Tokyo
         [22.3, 114.2]      // Hong Kong
     ];
 
-    // Wrap and draw the antimeridian-safe polyline
-    const polyline = L.polyline(route, {color: 'blue'}).wrap();
-    polyline.addTo(map);
+    L.polyline(segment1, { color: 'blue' }).addTo(map);
+    L.polyline(segment2, { color: 'blue' }).addTo(map);
 
-    // Fit bounds to the wrapped polyline
-    map.fitBounds(polyline.getBounds(), {padding: [50, 50]});
+    // Fit bounds to all segments
+    const allPoints = segment1.concat(segment2);
+    map.fitBounds(allPoints, { padding: [50, 50] });
 </script>
 </body>
 </html>
