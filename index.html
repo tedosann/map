@@ -31,24 +31,27 @@
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Route split into logical segments to prevent jump across globe
+    // Adjusted route to avoid Cuba and major landmasses
     const segment1 = [
         [40.0, -74.0],     // East Coast USA
+        [33.0, -70.0],     // South of Bermuda
+        [22.0, -75.0],     // South of Cuba (Caribbean bypass)
         [10.0, -79.5],     // Panama
+        [12.0, -130.0],    // Mid-Pacific point
         [21.3, -157.8]     // Hawaii
     ];
 
     const segment2 = [
-        [21.3, -157.8],    // Hawaii (again, for continuity)
+        [21.3, -157.8],    // Hawaii
+        [25.0, 170.0],     // South of Wake Island (manual bend)
+        [30.0, 150.0],     // Open Pacific
         [35.7, 139.7],     // Tokyo
         [22.3, 114.2]      // Hong Kong
     ];
 
-    // Draw each segment
     L.polyline(segment1, { color: 'blue' }).addTo(map);
     L.polyline(segment2, { color: 'blue' }).addTo(map);
 
-    // Markers
     const ports = segment1.concat(segment2.slice(1)); // Avoid double Hawaii
     ports.forEach(([lat, lng]) => {
         L.circleMarker([lat, lng], {
