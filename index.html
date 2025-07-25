@@ -65,18 +65,18 @@
 };
 
     map.on('load', () => {
-        const deckgl = new deck.DeckGL({
-            map: map,
-            layers: [
-                new deck.GeoJsonLayer({
-                    id: 'sperry-route',
-                    data: routeGeoJSON,
-                    getLineColor: [0, 0, 255],
-                    getLineWidth: 4,
-                    lineWidthUnits: 'pixels'
-                })
-            ]
-        });
+        const overlay = new deck.MapboxOverlay({
+    layers: [
+        new deck.GeoJsonLayer({
+            id: 'sperry-route',
+            data: routeGeoJSON,
+            getLineColor: [0, 0, 255],
+            getLineWidth: 4,
+            lineWidthUnits: 'pixels'
+        })
+    ]
+});
+map.addControl(overlay);
     });
 </script>
 </body>
