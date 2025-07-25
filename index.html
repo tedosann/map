@@ -31,31 +31,30 @@
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Route adjusted to prevent wrapping across the antimeridian
-    const route = [
+    // Route manually split to avoid antimeridian jump
+    const segment1 = [
         [40.0, -74.0],     // East Coast USA
         [34.5, -75.0],     // Off Cape Hatteras
         [24.0, -81.5],     // Between Cuba and Florida Keys
         [10.0, -79.5],     // Panama
         [12.0, -130.0],    // Mid-Pacific
         [21.3, -157.8],    // Hawaii
-        [25.0, 190.0],     // Adjusted to avoid antimeridian wrapping (equivalent to -170.0)
-        [30.0, 180.1],     // Just after antimeridian (slightly beyond 180°)
+        [25.0, -170.0],    // West of 180
+        [30.0, -179.9]     // Just before antimeridian
+    ];
+
+    const segment2 = [
+        [30.0, 179.9],     // Just after antimeridian
         [35.7, 139.7],     // Tokyo
         [22.3, 114.2]      // Hong Kong
     ];
 
-    // Normalize longitudes > 180 to allow continuous polyline
-    const normalizedRoute = route.map(([lat, lng]) => {
-        if (lng < -180) lng += 360;
-        if (lng > 180) lng -= 360;
-        return [lat, lng];
-    });
-
-    L.polyline(normalizedRoute, { color: 'blue' }).addTo(map);
+    L.polyline(segment1, { color: 'blue' }).addTo(map);
+    L.polyline(segment2, { color: 'blue' }).addTo(map);
 
     // Markers at actual positions
-    normalizedRoute.forEach(([lat, lng]) => {
+    const allPoints = segment1.concat(segment2);
+    allPoints.forEach(([lat, lng]) => {
         L.circleMarker([lat, lng], {
             radius: 4,
             color: 'red',
@@ -64,7 +63,7 @@
         }).addTo(map);
     });
 
-    map.fitBounds(normalizedRoute, { padding: [50, 50] });
+    map.fitBounds(allPoints, { padding: [50, 50] });
 </script>
 </body>
 </html>
