@@ -31,7 +31,7 @@
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Route with realistic bends and antimeridian-safe split
+    // Route with realistic bends and fixed antimeridian wrap
     const segment1 = [
         [40.0, -74.0],     // East Coast USA
         [33.0, -70.0],     // South of Bermuda
@@ -43,12 +43,12 @@
 
     const segment2a = [
         [21.3, -157.8],    // Hawaii
-        [25.0, 170.0],     // Near 180° west of it
-        [30.0, 179.9]      // Just before antimeridian
+        [25.0, -170.0],    // Mid-Pacific, near 180°
+        [30.0, -179.9]     // Just before antimeridian (west side)
     ];
 
     const segment2b = [
-        [30.0, -179.9],    // Just after antimeridian
+        [30.0, -179.8],    // Just after antimeridian (east side, still negative)
         [35.7, 139.7],     // Tokyo
         [22.3, 114.2]      // Hong Kong
     ];
