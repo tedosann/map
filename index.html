@@ -65,6 +65,15 @@
 };
 
     map.on('load', () => {
+    // Hide all country labels except US, Japan, Australia, and China
+    map.getStyle().layers.forEach(layer => {
+        if (layer.type === 'symbol' && layer.layout && layer.layout['text-field']) {
+            map.setLayoutProperty(layer.id, 'visibility', 'none');
+        }
+    });
+
+    // Re-add only selected country labels manually if necessary (this step assumes label data is available)
+    // You can use a custom GeoJSON or vector tile source with filtered features for better control.
         const overlay = new deck.MapboxOverlay({
     layers: [
         new deck.GeoJsonLayer({
