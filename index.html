@@ -20,28 +20,36 @@
 <div id="map"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    const map = L.map('map', { worldCopyJump: true }).setView([20, 180], 3);
+    const map = L.map('map', {
+        center: [20, 180],
+        zoom: 3,
+        worldCopyJump: true
+    });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Original coordinates for markers (not shifted)
-    const ports = [
+    // Route split into logical segments to prevent jump across globe
+    const segment1 = [
         [40.0, -74.0],     // East Coast USA
         [10.0, -79.5],     // Panama
-        [21.3, -157.8],    // Hawaii
+        [21.3, -157.8]     // Hawaii
+    ];
+
+    const segment2 = [
+        [21.3, -157.8],    // Hawaii (again, for continuity)
         [35.7, 139.7],     // Tokyo
         [22.3, 114.2]      // Hong Kong
     ];
 
-    // Shift longitudes for polyline only to avoid antimeridian jump
-    const shifted = ports.map(([lat, lng]) => [lat, lng < 0 ? lng + 360 : lng]);
+    // Draw each segment
+    L.polyline(segment1, { color: 'blue' }).addTo(map);
+    L.polyline(segment2, { color: 'blue' }).addTo(map);
 
-    L.polyline(shifted, { color: 'blue' }).addTo(map);
-
-    // Draw markers using original coordinates
+    // Markers
+    const ports = segment1.concat(segment2.slice(1)); // Avoid double Hawaii
     ports.forEach(([lat, lng]) => {
         L.circleMarker([lat, lng], {
             radius: 4,
@@ -51,7 +59,7 @@
         }).addTo(map);
     });
 
-    map.fitBounds(shifted, { padding: [50, 50] });
+    map.fitBounds(ports, { padding: [50, 50] });
 </script>
 </body>
 </html>
