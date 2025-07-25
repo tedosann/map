@@ -31,30 +31,24 @@
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Adjust route to pass between Cuba and the US East Coast
-    const segment1 = [
+    // Full route adjusted to pass between Cuba and Florida, and avoid antimeridian jump
+    const route = [
         [40.0, -74.0],     // East Coast USA
         [34.5, -75.0],     // Off Cape Hatteras
         [24.0, -81.5],     // Between Cuba and Florida Keys
         [10.0, -79.5],     // Panama
         [12.0, -130.0],    // Mid-Pacific
         [21.3, -157.8],    // Hawaii
-        [25.0, -170.0],    // Near 180° west
-        [30.0, -179.9]     // Just before antimeridian
-    ];
-
-    const segment2 = [
-        [30.0, 179.9],     // Just after antimeridian
+        [25.0, 170.0],     // Near Wake Island (avoiding 180°)
+        [30.0, 150.0],     // Open Pacific
         [35.7, 139.7],     // Tokyo
         [22.3, 114.2]      // Hong Kong
     ];
 
-    L.polyline(segment1, { color: 'blue' }).addTo(map);
-    L.polyline(segment2, { color: 'blue' }).addTo(map);
+    L.polyline(route, { color: 'blue' }).addTo(map);
 
     // Add markers for each point
-    const ports = segment1.concat(segment2);
-    ports.forEach(([lat, lng]) => {
+    route.forEach(([lat, lng]) => {
         L.circleMarker([lat, lng], {
             radius: 4,
             color: 'red',
@@ -63,7 +57,7 @@
         }).addTo(map);
     });
 
-    map.fitBounds(ports, { padding: [50, 50] });
+    map.fitBounds(route, { padding: [50, 50] });
 </script>
 </body>
 </html>
