@@ -20,8 +20,8 @@
 <div id="map"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // Explicitly set initial map view
-    const map = L.map('map').setView([20, 0], 2);
+    // Explicitly set initial map view centered on the Pacific
+    const map = L.map('map').setView([20, 180], 3);
 
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -29,8 +29,8 @@
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Adjusted polyline for Sperry's route with proper longitude range (-180 to 180)
-    const exampleRoute = [
+    // Adjust coordinates by adding 360 to negative longitudes
+    const originalRoute = [
         [40.0, -74.0],     // East Coast USA
         [10.0, -79.5],     // Panama
         [21.3, -157.8],    // Hawaii
@@ -38,10 +38,12 @@
         [22.3, 114.2]      // Hong Kong
     ];
 
-    // Draw example route
-    const polyline = L.polyline(exampleRoute, {color: 'blue'}).addTo(map);
+    const adjustedRoute = originalRoute.map(([lat, lng]) => [lat, lng < 0 ? lng + 360 : lng]);
 
-    // Manually set bounds to avoid crossing the date line
+    // Draw corrected route
+    const polyline = L.polyline(adjustedRoute, {color: 'blue'}).addTo(map);
+
+    // Set map view to fit adjusted route
     map.fitBounds(polyline.getBounds(), {padding: [50, 50]});
 </script>
 </body>
